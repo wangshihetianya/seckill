@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhl.sportplay.dao.SeckillMapper">
+
+    <select id="getActivityCount" resultType="int">
+        select count(*) from seckill
+        <if test="title != null" >
+            where title like #{title}
+        </if>
+    </select>
+
+    <select id="getAllActivity" resultType="com.zhl.sportplay.pojo.SeckillActivity">
+        select id, title, start_time as startTime, number, version, status
+        from seckill
+        <if test="title != null" >
+            where title like #{title}
+        </if>
+        LIMIT #{pageStart}, #{pageSize}
+    </select>
+
+    <insert id="addSeckillActivity">
+        insert into seckill (title, start_time, number, status)
+        values (#{title}, #{startTime}, #{number}, #{status})
+    </insert>
+
+    <update id="updateSeckillActivity">
+        update seckill set title=#{title}, start_time=#{startTime}, number=#{number}
+        where id=#{id};
+    </update>
+
+    <delete id="deleteSeckillActivity">
+        delete from seckill where id=#{id};
+    </delete>
+
+</mapper>

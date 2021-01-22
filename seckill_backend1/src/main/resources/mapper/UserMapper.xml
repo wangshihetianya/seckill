@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhl.sportplay.dao.UserMapper">
+
+    <select id="getUserByNameAndPwd" resultType="com.zhl.sportplay.pojo.User">
+        select u.user_id as id, u.username, u.password, r.name as role
+        from user_info u, role r, user_role ur
+        where u.user_id=ur.user_id and ur.role_id=r.id and u.username=#{username} and u.password=#{password}
+    </select>
+
+    <select id="getPermissionByRole" resultType="String">
+        select p.name
+        from role r, role_permission rp, permission p
+        where r.id=rp.role_id and rp.permission_id=p.id and r.name=#{role}
+    </select>
+
+    <select id="getAllUser" resultType="com.zhl.sportplay.pojo.User">
+        select u.user_id as id, u.username, u.password, r.name as role
+        from user_info u, role r, user_role ur
+        where u.user_id=ur.user_id and ur.role_id=r.id
+        <if test="username != null" >
+            and u.username like #{username}
+        </if>
+        LIMIT #{pageStart}, #{pageSize}
+    </select>
+
+    <select id="getUserCounts" resultType="int">
+        select count(*)
+        from user_info u, user_role ur
+        where u.user_id=ur.user_id
+        <if test="username != null" >
+            and u.username like #{username}
+        </if>
+
+    </select>
+
+    <insert id="addUser">
+        insert into user_info (username, password)
+        values (#{username}, #{password})
+    </insert>
+
+    <insert id="addUserRole">
+        insert into user_role (user_id, role_id)
+        select u.user_id, r.id
+        from user_info u, role r
+        where u.username=#{username} and r.name=#{role};
+    </insert>
+
+    <update id="updateUser">
+        update user_info set username=#{username}, password=#{password}
+        where user_id=#{id};
+    </update>
+
+    <update id="updateUserRole">
+        update user_role set role_id = (select id from role where name = #{role})
+        where user_id=#{id};
+    </update>
+
+    <delete id="deleteUser">
+        delete from user_info where user_id=#{id};
+    </delete>
+
+</mapper>

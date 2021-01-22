@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhl.sportplay.dao.OrderMapper">
+
+
+    <select id="checkOrder" resultType="int">
+        select count(*) from `order`
+        where activity_id=#{activityID} and user_id=#{userID}
+    </select>
+
+
+</mapper>
